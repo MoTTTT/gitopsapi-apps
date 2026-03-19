@@ -1,0 +1,7 @@
+{
+  "_comment": "Template ApplicationClusterConfig — copy and fill in values before POSTing to /api/v1/application-configs",
+  "application_name": "<application-name>",
+  "cluster_name": "<cluster-name>",
+  "values_override": {},
+  "external_hosts": []
+}

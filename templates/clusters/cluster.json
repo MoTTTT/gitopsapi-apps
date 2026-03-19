@@ -1,0 +1,28 @@
+{
+  "_comment": "Template ClusterSpec — copy and fill in values before POSTing to /api/v1/clusters",
+  "name": "<cluster-name>",
+  "platform": {
+    "name": "<proxmox-node-name>",
+    "type": "proxmox",
+    "endpoint": "https://<proxmox-host>:8006",
+    "nodes": ["<proxmox-node-name>"],
+    "template_node": "<proxmox-node-name>",
+    "template_vmid": 100,
+    "credentials_ref": "capmox-manager-credentials",
+    "bridge": "vmbr0"
+  },
+  "vip": "<cluster-vip>",
+  "ip_range": "<node-ip-start>-<node-ip-end>",
+  "dimensions": {
+    "control_plane_count": 1,
+    "worker_count": 2,
+    "cpu_per_node": 4,
+    "memory_gb_per_node": 16,
+    "boot_volume_gb": 50
+  },
+  "managed_gitops": true,
+  "sops_secret_ref": "gitopsapi-age-key",
+  "extra_manifests": [],
+  "allow_scheduling_on_control_planes": false,
+  "external_hosts": []
+}

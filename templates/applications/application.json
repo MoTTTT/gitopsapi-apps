@@ -1,0 +1,10 @@
+{
+  "_comment": "Template ApplicationSpec — copy and fill in values before POSTing to /api/v1/applications",
+  "name": "<application-name>",
+  "description": "<human-readable description>",
+  "chart_name": "<helm-chart-name>",
+  "chart_version": "<semver>",
+  "chart_repo": "https://<helm-repo-url>",
+  "namespace": "<target-namespace>",
+  "values": {}
+}
