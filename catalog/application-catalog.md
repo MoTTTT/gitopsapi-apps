@@ -132,7 +132,7 @@ Seed catalog for GitOpsAPI. Extracted from cluster09 GitOps repos, gitopsdev-app
 | name | ollama |
 | helmRepo | <https://helm.otwld.com/> |
 | chart | ollama |
-| chartVersion | ⚠️ RECOMMENDED: confirm version (was blank in manifest) |
+| chartVersion | 1.52.0 |
 | namespace | ollama |
 
 ---
@@ -320,6 +320,48 @@ Seed catalog for GitOpsAPI. Extracted from cluster09 GitOps repos, gitopsdev-app
 
 ## Planned Applications
 
+### openbao
+
+**Description**: Open-source secrets manager and encryption service — a community fork of HashiCorp Vault. Stores and controls access to tokens, passwords, certificates, and encryption keys. Used as the platform credential keystore for GitOpsAPI and agent fleet secrets (Scenario C security posture).
+**GitHub**: <https://github.com/openbao/openbao>
+**Web**: <https://openbao.org>
+**Category**: Security, Secrets Management
+**Target cluster**: platform-services
+**Task**: PROJ-006/T-009 (CC-081)
+
+| Field | Value |
+| --- | --- |
+| name | openbao |
+| helmRepo | <https://openbao.github.io/openbao-helm/> |
+| chart | openbao |
+| chartVersion | 0.8.1 |
+| namespace | openbao |
+
+**Configuration**: Single-node Raft (no HA), UI enabled, 20Gi piraeus-datastore PVC, exposed at `secrets.podzone.cloud` via HTTPRoute.
+
+**Post-install init** (manual, one-time):
+
+1. `kubectl exec -n openbao openbao-0 -- bao operator init` — generates root token + 5 unseal keys; distribute keys securely
+2. `kubectl exec -n openbao openbao-0 -- bao operator unseal` × 3 (threshold: 3 of 5 keys)
+3. Enable KV-v2: `bao secrets enable -path=secret kv-v2`
+4. Enable Kubernetes auth: `bao auth enable kubernetes` — wire to cluster service account (required for External Secrets Operator, PROJ-006/T-013)
+5. See <https://openbao.org/docs/commands/operator/init/> for full procedure
+
+**Deployment sequence** (PROJ-006 tasks):
+
+- T-009: Add to catalog (this entry) ✅
+- T-011: Deploy to platform-services via GitOpsAPI
+- T-012: Seed KV from credential catalog; define per-agent-role policies
+- T-013: Wire External Secrets Operator to sync secrets into cluster K8s Secrets
+- T-014: Migrate agent instances to OpenBao auth
+
+**Test data files**:
+
+- `tests/test_data/applications/openbao.json`
+- `tests/test_data/application-configs/openbao-platform-services.json`
+
+---
+
 ### forgejo
 
 **Description**: Self-hosted Git forge — replaces GitHub dependency. Hosts platform repos, CI/CD pipelines (Forgejo Actions), and Helm chart registry (OCI).
@@ -473,6 +515,7 @@ Seed catalog for GitOpsAPI. Extracted from cluster09 GitOps repos, gitopsdev-app
 | piraeus affinity-ctrl | Platform Infra | Deployed |
 | podzone-mpc | AI/ML Infrastructure | Deployed |
 | docker-build-agent | CI/CD | Active (manual, erectus) |
+| openbao | Security | Planned (PROJ-006/T-009) |
 | forgejo | Source Control | Planned (TASK-039) |
 | cloudnativepg | Data | Planned (TASK-041) |
 | nexus | Artifact Mgmt | Planned (HIGH — replaces Harbor) |
