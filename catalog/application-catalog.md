@@ -523,3 +523,27 @@ Seed catalog for GitOpsAPI. Extracted from cluster09 GitOps repos, gitopsdev-app
 | nfs-server | Storage | Proposed |
 | everything-ai | AI/ML | Proposed |
 | telegram-bot | Platform Mgmt | Strategic |
+
+
+---
+
+### academy
+
+**Description**: PodZone Academy — AI-powered Socratic learning platform. Multi-curricula web portal with AI tutor (Alex), Keycloak OIDC auth, Qdrant content index, PostgreSQL progress tracking.
+**GitHub**: <https://github.com/MoTTTT/academy>
+**Category**: Training, Platform Services
+
+| Field | Value |
+| --- | --- |
+| name | academy |
+| helmRepo | ⚠️ TBD — Helm chart in repo; publish to gh-pages when Helm chart templates are complete |
+| chart | academy |
+| chartVersion | 0.1.0 |
+| namespace | academy |
+| applicationRepo | git@github.com:MoTTTT/academy.git |
+| targetCluster | platform-services |
+
+**Dependencies**: Keycloak (PROJ-006/T-007), CloudNativePG (PROJ-006/T-004), Qdrant (agentsonly — shared), Ollama (agentsonly — shared)
+
+**Status**: Scaffolded (PROJ-011/T-003 — 2026-03-29). Backend (T-004–T-008) and frontend (T-009–T-010) pending.
+
